@@ -2,19 +2,35 @@
 
 This is a simple Node program which will take a text file of carriage return seperated URLs, and download the corresponding clips from Twitch in MP4 format.
 
-## Running The Program
+## Installing The Program
+
+**Easy Setup**:
 
 Download the [RAR File](https://github.com/thefiz/TwitchClipDownloader/raw/master/twitchclipdownloader.rar)
 
 Extract to it's own directory
 
+
+
+**In Depth Setup**:
+
+Go to the [Releases Page](https://github.com/thefiz/TwitchClipDownloader/releases/tag/1.0)
+
+Download the binary that matches your OS
+
+Place the binary in an new directory
+
+Create a blank directory in the same directory as the binary called "downloads"
+
+Create a text file in the same directory as the binary called "clips.txt" 
+
+
+## Running the Program
+
 Edit the clips.txt file with the clips you want to download, one per line
 
-Run the executable that matches your OS
+Run the binary
 
---------
-
-If you are running the program from the source code, please be sure to create an empty directory titled "downloads" in the root directory of the project.
 
 ## Built With
 
