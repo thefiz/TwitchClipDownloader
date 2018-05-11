@@ -12,6 +12,10 @@ Edit the clips.txt file with the clips you want to download, one per line
 
 Run the executable that matches your OS
 
+--------
+
+If you are running the program from the source code, plase be sure to create an empty directory titled "downloads" in the root directory of the project.
+
 ## Built With
 
 * [Visual Studio Code](https://code.visualstudio.com/)
