@@ -14,7 +14,7 @@ Extract to it's own directory
 
 **Custom Setup**:
 
-Go to the [Releases Page](https://github.com/thefiz/TwitchClipDownloader/releases/tag/1.0)
+Go to the [Releases Page](https://github.com/thefiz/TwitchClipDownloader/releases/tag/v1.0)
 
 Download the binary that matches your OS
 
