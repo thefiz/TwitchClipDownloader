@@ -32,7 +32,7 @@ This project is licensed under the MIT License
 
 ## Acknowledgments
 
-* SkinnedTeen for showing me that there was a need for this
+* [SkinnedTeen](http://www.twitch.tv/skinnedteen) for showing me that there was a need for this
 
 ## Tips/Donations
 
