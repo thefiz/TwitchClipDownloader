@@ -10,7 +10,7 @@ Download the [RAR File](https://github.com/thefiz/TwitchClipDownloader/raw/maste
 
 Extract to it's own directory
 
-
+--------
 
 **In Depth Setup**:
 
@@ -23,6 +23,8 @@ Place the binary in an new directory
 Create a blank directory in the same directory as the binary called "downloads"
 
 Create a text file in the same directory as the binary called "clips.txt" 
+
+--------
 
 
 ## Running the Program
