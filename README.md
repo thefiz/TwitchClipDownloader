@@ -33,3 +33,7 @@ This project is licensed under the MIT License
 ## Acknowledgments
 
 * SkinnedTeen for showing me that there was a need for this
+
+## Tips/Donations
+
+This software is provided free of charge.  If you use this software, like it, and want to support me, you can donate via my [StreamLabs Donation Page](https://streamlabs.com/thefiz)
