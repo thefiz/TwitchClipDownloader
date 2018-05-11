@@ -1,4 +1,4 @@
-var keypress = require("keypress");
+const keypress = require("keypress");
 const config = require("./config.json");
 const request = require("request");
 const fs = require("fs");
