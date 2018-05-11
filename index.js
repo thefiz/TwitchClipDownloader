@@ -43,13 +43,9 @@ var getClipInfo = function(slug) {
 };
 
 var downloadClip = function(clipID, clipTitle, clipGame) {
-  request(base_clip_path + clipID + ".mp4")
-    .pipe(
-      fs.createWriteStream(
-        "./downloads/" + clipTitle + " - " + clipGame + ".mp4"
-      )
-    )
-    .then(function() {});
+  request(base_clip_path + clipID + ".mp4").pipe(
+    fs.createWriteStream("./downloads/" + clipTitle + " - " + clipGame + ".mp4")
+  );
 };
 
 readTextFile().then(function() {
