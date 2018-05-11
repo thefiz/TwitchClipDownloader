@@ -1,9 +1,10 @@
+var keypress = require("keypress");
 const config = require("./config.json");
 const request = require("request");
 const fs = require("fs");
-
 const base_clip_path = "https://clips-media-assets.twitch.tv/";
 var slugs = [];
+keypress(process.stdin);
 
 var readTextFile = function() {
   return new Promise(function(resolve, reject) {
@@ -35,7 +36,11 @@ var getClipInfo = function(slug) {
           let jsonContent = JSON.parse(body);
           resolve(jsonContent);
         } else {
-          reject("Error getting clip info for " + slug);
+          reject(
+            "Error getting clip info for " +
+              slug +
+              " -- Please check the URL and try again."
+          );
         }
       }
     );
@@ -46,13 +51,42 @@ var downloadClip = function(clipID, clipTitle, clipGame) {
   request(base_clip_path + clipID + ".mp4").pipe(
     fs.createWriteStream("./downloads/" + clipTitle + " - " + clipGame + ".mp4")
   );
+  console.log(
+    "Downloading Complete - " + clipTitle + " - " + clipGame + ".mp4"
+  );
 };
 
-readTextFile().then(function() {
-  var i;
-  for (i = 0; i < slugs.length; i++) {
-    getClipInfo(slugs[i]).then(function(clipInfo) {
-      downloadClip(clipInfo.tracking_id, clipInfo.title, clipInfo.game);
+var pressKey = function() {
+  return new Promise(function(resolve, reject) {
+    console.log("Clips Downloading.  Once finished, Type 'exit' to exit\n\n");
+    process.stdin.on("keypress", function(ch, key) {
+      process.exit();
     });
-  }
-});
+  });
+};
+
+var processClips = function() {
+  return new Promise(function(resolve, reject) {
+    var i;
+    for (i = 0; i < slugs.length; i++) {
+      getClipInfo(slugs[i])
+        .then(function(clipInfo) {
+          downloadClip(clipInfo.tracking_id, clipInfo.title, clipInfo.game);
+          console.log(
+            "Downloading Clip - " + clipInfo.title + " - " + clipInfo.game
+          );
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
+    resolve();
+  });
+};
+
+readTextFile()
+  .then(processClips)
+  .then(pressKey)
+  .catch(function(error) {
+    console.log(error);
+  });
