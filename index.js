@@ -58,7 +58,7 @@ var downloadClip = function(clipID, clipTitle, clipGame) {
 
 var pressKey = function() {
   return new Promise(function(resolve, reject) {
-    console.log("Clips Downloading.  Once finished, Type 'exit' to exit\n\n");
+    console.log("Clips Downloading.  Once finished, Type 'exit' to exit\n\nThis software is provided free of charge.  If you use and like it, you can send a tip to TheFiz at https://streamlabs.com/thefiz");
     process.stdin.on("keypress", function(ch, key) {
       process.exit();
     });
