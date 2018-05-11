@@ -5,6 +5,7 @@ const fs = require("fs");
 const base_clip_path = "https://clips-media-assets.twitch.tv/";
 var slugs = [];
 keypress(process.stdin);
+const sanitize = require("sanitize-filename")
 
 var readTextFile = function() {
   return new Promise(function(resolve, reject) {
@@ -48,12 +49,12 @@ var getClipInfo = function(slug) {
 };
 
 var downloadClip = function(clipID, clipTitle, clipGame) {
+  var dirtyFileName = "./downloads/" + clipTitle + " - " + clipGame + ".mp4"
+  var cleanFileName = sanitize(dirtyFileName)
   request(base_clip_path + clipID + ".mp4").pipe(
-    fs.createWriteStream("./downloads/" + clipTitle + " - " + clipGame + ".mp4")
+    fs.createWriteStream(cleanFileName)
   );
-  console.log(
-    "Downloading Complete - " + clipTitle + " - " + clipGame + ".mp4"
-  );
+  console.log("Completed Download - " + cleanFileName);
 };
 
 var pressKey = function() {
