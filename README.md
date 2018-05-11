@@ -18,7 +18,7 @@ Run the executable that matches your OS
 
 ## Authors
 
-* **TheFiz** -  [GitHub](https://github.com/thefiz) [Twitch](https://www.twitch.tv/thefiz)
+* **TheFiz** -  [GitHub](https://github.com/thefiz) - [Twitch](https://www.twitch.tv/thefiz)
 
 See also the list of [contributors](https://github.com/thefiz/TwitchClipDownloader/contributors) who participated in this project.
 
