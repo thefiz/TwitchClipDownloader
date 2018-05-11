@@ -12,7 +12,7 @@ Extract to it's own directory
 
 --------
 
-**In Depth Setup**:
+**Custom Setup**:
 
 Go to the [Releases Page](https://github.com/thefiz/TwitchClipDownloader/releases/tag/1.0)
 
