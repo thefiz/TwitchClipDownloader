@@ -49,10 +49,10 @@ var getClipInfo = function(slug) {
 };
 
 var downloadClip = function(clipID, clipTitle, clipGame) {
-  var dirtyFileName = "./downloads/" + clipTitle + " - " + clipGame + ".mp4"
+  var dirtyFileName = clipTitle + " - " + clipGame + ".mp4"
   var cleanFileName = sanitize(dirtyFileName)
   request(base_clip_path + clipID + ".mp4").pipe(
-    fs.createWriteStream(cleanFileName)
+    fs.createWriteStream("./downloads/" + cleanFileName)
   );
   console.log("Completed Download - " + cleanFileName);
 };
