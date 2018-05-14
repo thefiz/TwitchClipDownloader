@@ -49,7 +49,27 @@ var getClipInfo = function(slug) {
   });
 };
 
-var downloadClip = function(clipID, clipTitle, clipGame) {
+var getClipInfov2 = function(slug) {
+  return new Promise(function(resolve, reject) {
+    request.get(
+      { url: "https://clips.twitch.tv/api/v2/clips/" + slug + "/status" },
+      function(error, response, body) {
+        if (response.statusCode == 200) {
+          let jsonContent = JSON.parse(body);
+          resolve(jsonContent);
+        } else {
+          reject(
+            "Error getting clip info for " +
+              slug +
+              " -- Please check the URL and try again."
+          );
+        }
+      }
+    );
+  });
+};
+
+var downloadClip = function(clipID, clipTitle, clipGame, slug) {
   return new Promise(function(resolve, reject) {
     var dirtyFileName = clipTitle + " - " + clipGame + ".mp4";
     var cleanFileName = sanitize(dirtyFileName);
@@ -64,8 +84,26 @@ var downloadClip = function(clipID, clipTitle, clipGame) {
           resolve("Download Complete - " + cleanFileName);
         });
       } else {
-        console.log("ERROR!! " + cleanFileName + " is unable to download.  This is a bug with the Twitch API and cannot be corrected until they update")
+        getClipInfov2(slug).then(function(clipInfo) {
+          downloadClipv2(clipInfo.quality_options[0].source, slug).then(
+            function(value) {
+              console.log(value);
+            }
+          );
+        });
       }
+    });
+  });
+};
+
+var downloadClipv2 = function(url, slug) {
+  return new Promise(function(resolve, reject) {
+    var r = request(url).pipe(
+      fs.createWriteStream("./downloads/" + slug + ".mp4")
+    );
+    console.log("Starting Download - " + slug);
+    r.on("close", function() {
+      resolve("Download Complete - " + slug);
     });
   });
 };
@@ -85,6 +123,7 @@ var processClips = function() {
   return new Promise(function(resolve, reject) {
     var i;
     for (i = 0; i < slugs.length; i++) {
+      var slug = slugs[i];
       getClipInfo(slugs[i])
         .then(function(clipInfo) {
           if (clipInfo.thumbnails.medium.indexOf("offset") >= 0) {
@@ -99,7 +138,8 @@ var processClips = function() {
           downloadClip(
             clipInfo.tracking_id,
             clipInfo.title,
-            clipInfo.game
+            clipInfo.game,
+            slug
           ).then(function(value) {
             console.log(value);
           });
