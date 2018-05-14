@@ -85,7 +85,7 @@ var downloadClip = function(clipID, clipTitle, clipGame, slug) {
         });
       } else {
         getClipInfov2(slug).then(function(clipInfo) {
-          downloadClipv2(clipInfo.quality_options[0].source, slug).then(
+          downloadClipv2(clipInfo.quality_options[0].source, cleanFileName).then(
             function(value) {
               console.log(value);
             }
@@ -96,14 +96,14 @@ var downloadClip = function(clipID, clipTitle, clipGame, slug) {
   });
 };
 
-var downloadClipv2 = function(url, slug) {
+var downloadClipv2 = function(url, cleanFileName) {
   return new Promise(function(resolve, reject) {
     var r = request(url).pipe(
-      fs.createWriteStream("./downloads/" + slug + ".mp4")
+      fs.createWriteStream("./downloads/" + cleanFileName)
     );
-    console.log("Starting Download - " + slug);
+    console.log("Starting Download - " + cleanFileName);
     r.on("close", function() {
-      resolve("Download Complete - " + slug);
+      resolve("Download Complete - " + cleanFileName);
     });
   });
 };
