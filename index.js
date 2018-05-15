@@ -7,6 +7,7 @@ var slugs = [];
 keypress(process.stdin);
 const sanitize = require("sanitize-filename");
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+global.downloads = 0;
 
 var readTextFile = function() {
   return new Promise(function(resolve, reject) {
@@ -81,6 +82,7 @@ var downloadClip = function(clipID, clipTitle, clipGame, slug) {
         );
         console.log("Starting Download - " + cleanFileName);
         r.on("close", function() {
+          global.downloads--;
           resolve("Download Complete - " + cleanFileName);
         });
       } else {
@@ -98,11 +100,10 @@ var downloadClip = function(clipID, clipTitle, clipGame, slug) {
 
 var downloadClipv2 = function(url, fileName) {
   return new Promise(function(resolve, reject) {
-    let r = request(url).pipe(
-      fs.createWriteStream("./downloads/" + fileName)
-    );
+    let r = request(url).pipe(fs.createWriteStream("./downloads/" + fileName));
     console.log("Starting Download - " + fileName);
     r.on("close", function() {
+      global.downloads--
       resolve("Download Complete - " + fileName);
     });
   });
@@ -111,7 +112,7 @@ var downloadClipv2 = function(url, fileName) {
 var pressKey = function() {
   return new Promise(function(resolve, reject) {
     console.log(
-      "Clips Downloading.  Once finished, Type 'exit' to exit\n\nThis software is provided free of charge.  If you use and like it, you can send a tip to TheFiz at https://streamlabs.com/thefiz\n\n"
+      "Clips Downloading.  Once finished, Type 'exit' to exit"
     );
     process.stdin.on("keypress", function(ch, key) {
       process.exit();
@@ -122,33 +123,44 @@ var pressKey = function() {
 var processClips = function() {
   return new Promise(function(resolve, reject) {
     var i;
-    for (i = 0; i < slugs.length; i++) {
-      let slug = slugs[i];
-      getClipInfo(slugs[i])
-        .then(function(clipInfo) {
-          if (clipInfo.thumbnails.medium.indexOf("offset") >= 0) {
-            let parts = clipInfo.thumbnails.medium.split("/");
-            let offsetURL = parts[parts.length - 1];
-            let offsetParts = offsetURL.split("-");
-            let offset = offsetParts[2];
-            clipInfo.tracking_id = clipInfo.broadcast_id.concat(
-              "-offset-" + offset
-            );
-          }
-          downloadClip(
-            clipInfo.tracking_id,
-            clipInfo.title,
-            clipInfo.game,
-            slug
-          ).then(function(value) {
-            console.log(value);
+    if (global.downloads < 5) {
+      if (slugs.length > 0) {
+        global.downloads++;
+        let slug = slugs.shift();
+        getClipInfo(slug)
+          .then(function(clipInfo) {
+            if (clipInfo.thumbnails.medium.indexOf("offset") >= 0) {
+              let parts = clipInfo.thumbnails.medium.split("/");
+              let offsetURL = parts[parts.length - 1];
+              let offsetParts = offsetURL.split("-");
+              let offset = offsetParts[2];
+              clipInfo.tracking_id = clipInfo.broadcast_id.concat(
+                "-offset-" + offset
+              );
+            }
+            downloadClip(
+              clipInfo.tracking_id,
+              clipInfo.title,
+              clipInfo.game,
+              slug
+            ).then(function(value) {
+              console.log(value);
+            });
+          })
+          .catch(function(error) {
+            console.log(error);
           });
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+
+        resolve();
+      } else {
+        if (global.downloads == 0) {
+          return console.log("\n\n\nAll Downloads Complete!!! \n\nThis software is provided free of charge.  \nIf you use and like it, you can send a tip to TheFiz at https://streamlabs.com/thefiz\n\n");
+        } 
+      }
     }
-    resolve();
+    setTimeout(function() {
+      processClips();
+    }, 1000);
   });
 };
 
