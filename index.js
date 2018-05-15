@@ -71,12 +71,12 @@ var getClipInfov2 = function(slug) {
 
 var downloadClip = function(clipID, clipTitle, clipGame, slug) {
   return new Promise(function(resolve, reject) {
-    var dirtyFileName = clipTitle + " - " + clipGame + ".mp4";
-    var cleanFileName = sanitize(dirtyFileName);
-    var url = base_clip_path + clipID + ".mp4";
+    let dirtyFileName = clipTitle + " - " + clipGame + ".mp4";
+    let cleanFileName = sanitize(dirtyFileName);
+    let url = base_clip_path + clipID + ".mp4";
     get_filesize(url).then(function(size) {
       if (!isNaN(size)) {
-        var r = request(url).pipe(
+        let r = request(url).pipe(
           fs.createWriteStream("./downloads/" + cleanFileName)
         );
         console.log("Starting Download - " + cleanFileName);
@@ -84,8 +84,8 @@ var downloadClip = function(clipID, clipTitle, clipGame, slug) {
           resolve("Download Complete - " + cleanFileName);
         });
       } else {
-        getClipInfov2(slug).then(function(clipInfo) {
-          downloadClipv2(clipInfo.quality_options[0].source, cleanFileName).then(
+        getClipInfov2(slug).then(function(info) {
+          downloadClipv2(info.quality_options[0].source, cleanFileName).then(
             function(value) {
               console.log(value);
             }
@@ -96,14 +96,14 @@ var downloadClip = function(clipID, clipTitle, clipGame, slug) {
   });
 };
 
-var downloadClipv2 = function(url, cleanFileName) {
+var downloadClipv2 = function(url, fileName) {
   return new Promise(function(resolve, reject) {
-    var r = request(url).pipe(
-      fs.createWriteStream("./downloads/" + cleanFileName)
+    let r = request(url).pipe(
+      fs.createWriteStream("./downloads/" + fileName)
     );
-    console.log("Starting Download - " + cleanFileName);
+    console.log("Starting Download - " + fileName);
     r.on("close", function() {
-      resolve("Download Complete - " + cleanFileName);
+      resolve("Download Complete - " + fileName);
     });
   });
 };
@@ -123,14 +123,14 @@ var processClips = function() {
   return new Promise(function(resolve, reject) {
     var i;
     for (i = 0; i < slugs.length; i++) {
-      var slug = slugs[i];
+      let slug = slugs[i];
       getClipInfo(slugs[i])
         .then(function(clipInfo) {
           if (clipInfo.thumbnails.medium.indexOf("offset") >= 0) {
-            var parts = clipInfo.thumbnails.medium.split("/");
-            var offsetURL = parts[parts.length - 1];
-            var offsetParts = offsetURL.split("-");
-            var offset = offsetParts[2];
+            let parts = clipInfo.thumbnails.medium.split("/");
+            let offsetURL = parts[parts.length - 1];
+            let offsetParts = offsetURL.split("-");
+            let offset = offsetParts[2];
             clipInfo.tracking_id = clipInfo.broadcast_id.concat(
               "-offset-" + offset
             );
